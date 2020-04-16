@@ -21,8 +21,8 @@ body {
 	position: fixed;
 	width: 200px;
 	height: 100%;
-	background-color: #555e60;
-	opacity: .95;
+	background-color: #03203f;
+	opacity: 1;
 	padding: 50px 0;
 }
 .content {

@@ -141,13 +141,20 @@ def test():
 def view_answer():
     srn = request.args.get('srn')
     session["srn"] = srn
+    return render_template("view_answers.html", user=session["username"], srn=srn)
+
+
+@application.route('/get_answers/', methods=["GET"])
+def get_answer():
+    srn = session["srn"]
+    count = int(request.args.get('count'))
     student_id = Student.query.filter_by(srn=srn).first().student_id
     answers = Answer.query.filter_by(student_id=student_id).all()
     data = []
     for answer in answers:
         data.append([answer.model, answer.answer, answer.total,
                      answer.marks, answer.answer_id])
-    return render_template("view_answers.html", user=session["username"], data=data)
+    return jsonify(data[2*count:2*count+2])
 
 
 @application.route('/update_marks/<id>', methods=["POST"])
@@ -170,18 +177,70 @@ def eval():
         answers = Answer.query.filter_by(student_id=s_id).all()
         total_marks = 0
         marks_scored = 0
+        count = 0
         for answer in answers:
-            total_marks += answer.total
-            marks_scored += answer.marks
-        data.append([name, srn, len(answers), marks_scored, total_marks])
+            if(answer.user == session["username"]):
+                total_marks += answer.total
+                marks_scored += answer.marks
+                count += 1
+        if(count):
+            data.append([name, srn, len(answers), marks_scored, total_marks])
 
     return render_template("evaluate.html", user=session["username"], data=data)
 
 
 @application.route('/result.html/')
 def result():
-
     return render_template("result.html", user=session["username"])
+
+
+@application.route('/get_students', methods=["GET"])
+def get_students():
+    term = request.args.get('term')
+    students = Student.query.all()
+    data = []
+    for student in students:
+        s_id = student.student_id
+        name = student.name
+        srn = student.srn
+        if(name.startswith(term)):
+            answers = Answer.query.filter_by(student_id=s_id).all()
+            total_marks = 0
+            marks_scored = 0
+            count = 0
+            for answer in answers:
+                if(answer.user == session["username"]):
+                    total_marks += answer.total
+                    marks_scored += answer.marks
+                    count += 1
+            if(count):
+                data.append([name, srn, marks_scored, total_marks])
+
+    return jsonify(data), 200
+
+
+@application.route('/get_results', methods=["GET"])
+def get_result():
+    count = int(request.args.get('count'))
+    students = Student.query.all()
+    data = []
+    for student in students:
+        s_id = student.student_id
+        name = student.name
+        srn = student.srn
+        answers = Answer.query.filter_by(student_id=s_id).all()
+        total_marks = 0
+        marks_scored = 0
+        answer_count = 0
+        for answer in answers:
+            if(answer.user == session["username"]):
+                total_marks += answer.total
+                marks_scored += answer.marks
+                answer_count += 1
+        if(answer_count):
+            data.append([name, srn, marks_scored, total_marks])
+
+    return jsonify(data[2*count: 2*count+2]), 200
 
 
 @application.route('/add.html/', methods=["GET", "POST"])

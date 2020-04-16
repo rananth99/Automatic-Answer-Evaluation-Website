@@ -7,9 +7,64 @@
 	<script src="https://kit.fontawesome.com/730aa83a56.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/table-style.css') }}">
+	<script>
+		var count = 0;
+		var srn = {{ srn }};
+		function load_table() {
+			var xhttp = new XMLHttpRequest();
+			console.log("getting")
+			xhttp.onreadystatechange = function () {
+				if (this.readyState === 4 && this.status === 200) {
+
+					var arr = JSON.parse(this.response);
+					var table = document.getElementById("answers");
+
+					for (var col = 0; col < arr.length; col++) {
+						var row = document.createElement("tr");
+						for (var i = 0; i < 4; i += 1) {
+							var data = document.createElement("td");
+							data.innerHTML = arr[col][i];
+							row.appendChild(data);
+						}
+						var data = document.createElement("td");
+
+						var form = document.createElement("form");
+						form.action = "/update_marks/" + arr[col][4];
+						form.method = "POST";
+
+						var inp = document.createElement("input");
+						inp.type = "text";
+						inp.name = "marks";
+						inp.placeholder = arr[col][3];
+						inp.required = true;
+
+						var btn = document.createElement("button");
+						btn.type = "submit";
+						btn.className = "btn-small";
+						btn.innerHTML = "Update";
+
+						form.appendChild(inp);
+						form.appendChild(btn);
+						data.appendChild(form);
+						row.appendChild(data);
+						table.appendChild(row);
+					}
+
+					count = count + 1;
+					if (arr.length != 0) {
+						setTimeout(load_table, 2000);
+					}
+
+				}
+			};
+
+			xhttp.open("GET", "/get_answers?count=" + count, true);
+			xhttp.send();
+		}
+	</script>
 </head>
 
-<body>
+<body onload="load_table()">
 	<div class="wrapper">
 		<div class="sidebar">
 			<div class="user-img">
@@ -27,9 +82,12 @@
 			</ul>
 		</div>
 	</div>
-	<div align="center">
+	<div>
+		<div align="center">
+			<h1>Automatic Answer Evaluator</h1>
+		</div>
 		<div class="table">
-			<table>
+			<table id="answers">
 				<thead>
 					<tr>
 						<td>MODEL</td>
@@ -39,22 +97,6 @@
 						<td>Update</td>
 					</tr>
 				</thead>
-				<tbody>
-					{% for row in data %}
-					<tr>
-						<td>{{ row[0] }}</td>
-						<td>{{ row[1] }}</td>
-						<td>{{ row[2] }}</td>
-						<td>{{ row[3] }}</td>
-						<td>
-							<form action="/update_marks/{{ row[4] }}" , method="POST">
-								<input type="text" name="marks" placeholder="{{row[3]}}" required>
-								<button type="submit" class="btn-small">Update</button>
-							</form>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
 			</table>
 		</div>
 	</div>
