@@ -1,17 +1,24 @@
 .table {
 	margin-left: 300px;
-	margin-top: 50px;
+  margin-top: 50px;
 }
 .table table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 85%;
+  width: 95%;
+  table-layout: fixed;
+}
+
+.table thead td{
+  font-size: large;
+  background-color: cornflowerblue;
 }
 
 .table td, th {
   border: 1px solid #000000;
-  text-align: left;
+  text-align: center;
   padding: 8px;
   background-color: #fffffe;
   opacity: .95;
+  word-wrap: break-word;
 }

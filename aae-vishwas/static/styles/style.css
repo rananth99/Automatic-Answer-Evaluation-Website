@@ -2,7 +2,7 @@
 
 body {
  	font-family: 'Roboto', sans-serif;
- 	background: url(img/mountain.jpg) no-repeat center center fixed;
+ 	background: url(img/back.jpg) no-repeat center center fixed;
  	background-size: cover;
  }
 .main-section {
@@ -11,7 +11,7 @@ body {
  	padding: 0;
  }
 .modal-content {
- 	background-color: #3b4652;
+ 	background-color: #03203f;
  	opacity: .95;
  	padding: 0 18px;
  	box-shadow: 0px 0px 3px #848484;
@@ -75,7 +75,9 @@ button {
 	color: #c2fbfe;
 }
 
-
+.title {
+	color: aqua;
+}
 
 
 
