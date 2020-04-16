@@ -26,6 +26,10 @@ def common(model, answer):
     fdists = [FreqDist(t) for t in tokens]
 
     tokens = [set(t) for t in tokens]
+
+    total = set.union(*tokens)
+    total -= STOPWORDS
+
     matches = {word for word in set.intersection(*tokens)}
 
     matches -= STOPWORDS
@@ -33,17 +37,8 @@ def common(model, answer):
     matches = [
         (word, min([f.get(word) for f in fdists]), len(word)) for word in matches
     ]
-    headers = ["word", "occurrences", "length"]
 
-    frequencies = {}
-
-    matches = [
-        (word, occurrences, length, frequencies.get(word, "unknown"))
-        for (word, occurrences, length) in matches
-    ]
-    headers.append("in literature")
-
-    return len(matches)
+    return len(matches)/len(total)
 
 
 class Ngrams(object):

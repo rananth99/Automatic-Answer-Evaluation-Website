@@ -137,9 +137,21 @@ def test():
     return render_template("test.html", user=session["username"])
 
 
-@application.route('/view_answers.html/<srn>')
-def view_answer():
+@application.route('/view_answers.html/<srn>', methods=["GET"])
+def view_answer(srn):
+    session["srn"] = srn
+    student_id = Student.query.filter_by(srn=srn).first().student_id
+    answers = Answer.query.filter_by(student_id=student_id).all()
+    data = []
+    for answer in answers:
+        data.append([answer.model, answer.answer, answer.marks, answer.total])
     return render_template("view_answer.html", user=session["username"], data=data)
+
+
+@application.route('/update_marks', methods=["POST"])
+def update_marks():
+
+    return redirect("/view_answer.html/"+session["srn"])
 
 
 @application.route('/evaluate.html/')
@@ -163,7 +175,7 @@ def eval():
 
 @application.route('/result.html/')
 def result():
- 
+
     return render_template("result.html", user=session["username"])
 
 
@@ -177,10 +189,13 @@ def add():
         answer = request.form["answer"]
         user = session["username"]
 
-        student = Student.query.filter_by(name=name, srn=srn)
+        print("Ola", name, srn)
+
+        student = Student.query.filter_by(name=name, srn=srn).first()
         if(student is None):
             student = Student(name=name, srn=srn)
             db.session.add(student)
+            db.session.commit()
 
         student_id = Student.query.filter_by(
             name=name, srn=srn).first().student_id
@@ -205,8 +220,11 @@ def evalulate_answer(model, answer):
     beta = 0.25
     pattern_score = Ngrams(model)*Ngrams(answer)
     common_score = common(model, answer)
+    print("Scores: ", pattern_score, common_score)
+    if(pattern_score == 0 or common_score == 0):
+        return 0
 
-    return min(1, alpha*pattern_score+(1-alpha)*common_score+beta)
+    return round(min(1, alpha*pattern_score+(1-alpha)*common_score+beta), 2)
 
 
 if __name__ == "__main__":
