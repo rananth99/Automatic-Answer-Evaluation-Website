@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Evaluate</title>
+	<meta charset="UTF-8">
+	<script src="https://kit.fontawesome.com/730aa83a56.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/table-style.css') }}">
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="sidebar">
+			<div class="user-img">
+				<img src="{{ url_for('static',filename='styles/img/face.jpg')}}">
+			</div>
+			<div class="content">
+				<h4> {{user}}</h4>
+			</div>
+			<ul>
+				<li><a href="/dashboard.html"><i class="fas fa-home"></i>HOME</a></li>
+				<li><a href="/test.html"><i class="fas fa-clipboard"></i>TEST</a></li>
+				<li><a href="#"><i class="fas fa-check-circle"></i>EVALUATE</a></li>
+				<li><a href="/result.html"><i class="fas fa-poll"></i>RESULT</a></li>
+				<li><a href="/logout"><i class="fas fa-sign-out-alt"></i>LOGOUT</a></li>
+			</ul>
+		</div>
+	</div>
+	<div align="center">
+		<h1>Evaluate</h1>
+	</div>
+	<div class="table">
+		<table>
+			<thead>
+				<tr>
+					<td>NAME</td>
+					<td>SRN</td>
+					<td>ANSWERS</td>
+					<td>SCORE</td>
+					<td>TOTAL</td>
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in data %}
+				<tr>
+					{% for d in row %}
+					{% if loop.index == 3 %}
+					<td><a href="/view_answers?srn={{ row[1] }}">{{ d }}</a></td>
+					{% else %}
+					<td>{{ d }}</td>
+					{% endif %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>
