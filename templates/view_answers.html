@@ -1,53 +1,63 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Evaluate</title>
+	<title>View Answers</title>
 	<meta charset="UTF-8">
 	<script src="https://kit.fontawesome.com/730aa83a56.js" crossorigin="anonymous"></script>
-	<link rel="stylesheet" type="text/css" href="styles/styles.css">
-	<link rel="stylesheet" type="text/css" href="styles/table-style.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/table-style.css') }}">
 </head>
+
 <body>
 	<div class="wrapper">
 		<div class="sidebar">
 			<div class="user-img">
-				<img src="styles/img/face.png">
+				<img src="{{ url_for('static',filename='styles/img/face.jpg')}}">
 			</div>
 			<div class="content">
-				<h4>Faculty Name</h4>
-				<h4>Subject Code</h4>
+				<h4> {{user}}</h4>
 			</div>
 			<ul>
-				<li><a href="dashboard.html"><i class="fas fa-home"></i>HOME</a></li>
-				<li><a href="test.html"><i class="fas fa-clipboard"></i>TEST</a></li>
-				<li><a href="#"><i class="fas fa-check-circle"></i>EVALUATE</a></li>
-				<li><a href="result.html"><i class="fas fa-poll"></i>RESULT</a></li>
-				<li><a href="login.html"><i class="fas fa-sign-out-alt"></i>LOGOUT</a></li>
+				<li><a href="/dashboard.html"><i class="fas fa-home"></i>HOME</a></li>
+				<li><a href="/test.html"><i class="fas fa-clipboard"></i>TEST</a></li>
+				<li><a href="/evaluate.html"><i class="fas fa-check-circle"></i>EVALUATE</a></li>
+				<li><a href="/result.html"><i class="fas fa-poll"></i>RESULT</a></li>
+				<li><a href="/logout"><i class="fas fa-sign-out-alt"></i>LOGOUT</a></li>
 			</ul>
 		</div>
 	</div>
 	<div align="center">
-		<h1>Evaluate Webpage</h1>
+		<div class="table">
+			<table>
+				<thead>
+					<tr>
+						<td>MODEL</td>
+						<td>ANSWER</td>
+						<td>TOTAL</td>
+						<td>SCORE</td>
+						<td>Update</td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for row in data %}
+					<tr>
+						<td>{{ row[0] }}</td>
+						<td>{{ row[1] }}</td>
+						<td>{{ row[2] }}</td>
+						<td>{{ row[3] }}</td>
+						<td>
+							<form action="/update_marks/{{ row[4] }}" , method="POST">
+								<input type="text" name="marks" placeholder="{{row[3]}}" required>
+								<button type="submit" class="btn-small">Update</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
-	<form action="eval.php">
-		<div class="QA">
-			<div class="form-qno">
-				<label class="label-qno">Question No :</label>
-				<input type="text" id="question_no" name="qno" class="form-qno">
-				<label class="label-ques">Question :</label>
-				<input type="text" id="question" name="question" class="from-ques"><br>
-			</div>
-			<div class="form-ans">
-				<label class="label-ans">Answer :</label>
-				<input type="text" id="answer" name="answer" class="form-ans"><br>
-			</div>
-		</div>
-		<div class="add_btn">
-			<button type="submit" class="btn"><i class="far fa-check-circle"></i>EVALUATE</button>
-		</div>
-	</form>
-	<form action="evaluate.html">
-		<button class="exit_btn">BACK</button>
-	</form>
 </body>
+
 </html>

@@ -27,9 +27,6 @@
 			</ul>
 		</div>
 	</div>
-	<div align="center">
-		<h1>Evaluate</h1>
-	</div>
 	<div class="table">
 		<table>
 			<thead>
@@ -46,7 +43,7 @@
 				<tr>
 					{% for d in row %}
 					{% if loop.index == 3 %}
-					<td><a href="/view_answers?srn={{ row[1] }}">{{ d }}</a></td>
+					<td><a href="/view_answers.html?srn={{ row[1] }}">{{ d }}</a></td>
 					{% else %}
 					<td>{{ d }}</td>
 					{% endif %}

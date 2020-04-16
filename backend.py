@@ -137,21 +137,26 @@ def test():
     return render_template("test.html", user=session["username"])
 
 
-@application.route('/view_answers.html/<srn>', methods=["GET"])
-def view_answer(srn):
+@application.route('/view_answers.html/', methods=["GET"])
+def view_answer():
+    srn = request.args.get('srn')
     session["srn"] = srn
     student_id = Student.query.filter_by(srn=srn).first().student_id
     answers = Answer.query.filter_by(student_id=student_id).all()
     data = []
     for answer in answers:
-        data.append([answer.model, answer.answer, answer.marks, answer.total])
-    return render_template("view_answer.html", user=session["username"], data=data)
+        data.append([answer.model, answer.answer, answer.total,
+                     answer.marks, answer.answer_id])
+    return render_template("view_answers.html", user=session["username"], data=data)
 
 
-@application.route('/update_marks', methods=["POST"])
-def update_marks():
-
-    return redirect("/view_answer.html/"+session["srn"])
+@application.route('/update_marks/<id>', methods=["POST"])
+def update_marks(id):
+    marks = float(request.form["marks"])
+    answer = Answer.query.filter_by(answer_id=id).first()
+    answer.marks = min(answer.total, marks)
+    db.session.commit()
+    return redirect(url_for("view_answer", srn=session["srn"]))
 
 
 @application.route('/evaluate.html/')
