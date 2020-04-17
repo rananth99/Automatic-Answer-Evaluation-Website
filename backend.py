@@ -71,6 +71,10 @@ class Student(db.Model):
 
 # Application #
 
+@application.route("/index.html/")
+def index():
+    print("Inside")
+    return render_template("index.html")
 
 @application.route("/")
 def home():
@@ -196,14 +200,14 @@ def result():
 
 @application.route('/get_students', methods=["GET"])
 def get_students():
-    term = request.args.get('term')
+    term = request.args.get('term').lower()
     students = Student.query.all()
     data = []
     for student in students:
         s_id = student.student_id
         name = student.name
         srn = student.srn
-        if(name.startswith(term)):
+        if(name.lower().startswith(term)):
             answers = Answer.query.filter_by(student_id=s_id).all()
             total_marks = 0
             marks_scored = 0
