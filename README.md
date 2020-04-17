@@ -1,7 +1,7 @@
 # Automatic-Answer-Evaluation-Website
 # Description :
 It is a website for Automatic Subjective Answer Evaluation using NLP technique.<br>
-We are using HTML,Flask,MySQL.
+We are using HTML,Flask,MySQL,React,AJAX Patterns,CSS,
 
 # Team Members :
 1) R Ananth - PES1201700286<br>
